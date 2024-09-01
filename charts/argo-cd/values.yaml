@@ -1,0 +1,41 @@
+## Argo CD configuration
+## Ref: https://github.com/argoproj/argo-cd
+## https://raw.githubusercontent.com/argoproj/argo-helm/main/charts/argo-cd/values.yaml
+
+argo-cd:
+  dex:
+    enabled: false
+  server:
+    extraArgs:
+      - --insecure
+  ## Argo Configs
+  configs:
+    # General Argo CD configuration
+    ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+    cm:
+      # -- Create the argocd-cm configmap for [declarative setup]
+      create: true
+    # Argo CD configuration parameters
+    ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
+    params:
+      # -- Create the argocd-cmd-params-cm configmap
+      # If false, it is expected the configmap will be created by something else.
+      create: true
+      ## Server properties
+      # -- Run server without TLS
+      ## NOTE: This value should be set when you generate params by other means as it changes ports used by ingress template.
+      server.insecure: false
+      # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
+      server.basehref: /argocd
+      # -- Used if Argo CD is running behind reverse proxy under subpath different from /
+      server.rootpath: 'argocd'
+    
+    secret:
+      # -- Bcrypt hashed admin password
+      ## Argo expects the password in the secret to be bcrypt hashed. You can create this hash with
+      ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+      # hiargo
+      argocdServerAdminPassword: "$2a$10$c3gqRsiIe9tzcTfBWkJ6t.Trv6iUsZnZhTohh1FtNNgxY4DZ.FqiC"
+      # -- Admin password modification time. Eg. `"2006-01-02T15:04:05Z"`
+      # @default -- `""` (defaults to current time)
+      argocdServerAdminPasswordMtime: ""
