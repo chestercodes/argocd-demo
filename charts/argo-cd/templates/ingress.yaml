@@ -5,20 +5,18 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
     - kind: Rule
-      match: Host(`argocd.local`)
+      match: Host(`argocd-127-0-0-1.nip.io`)
       priority: 10
       services:
         - name: "{{ .Release.Name }}-server"
           port: 80
     - kind: Rule
-      match: Host(`argocd.local`) && Headers(`Content-Type`, `application/grpc`)
+      match: Host(`argocd-127-0-0-1.nip.io`) && Headers(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: "{{ .Release.Name }}-server"
           port: 80
           scheme: h2c
-  tls:
-    certResolver: default
