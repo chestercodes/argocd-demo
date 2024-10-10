@@ -1,22 +1,27 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps
+  name: argocd
+  # all argo apps need to be in same namespace as argocd pods
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: production
+  # projects used to scope permissions to repos and/or clusters 
+  project: default
   source:
     repoURL: https://github.com/chestercodes/argocd-demo.git
+    # can be any git ref
     targetRevision: HEAD
-    path: charts/apps
-    # helm:
-    #   valueFiles:
-    #   - values.homelab.yaml
+    path: charts/argo-cd
+    helm:
+      valueFiles:
+      # file relative to path dir
+      - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: production
+    # destination namespace
+    namespace: argocd
   syncPolicy:
     automated:
       selfHeal: true

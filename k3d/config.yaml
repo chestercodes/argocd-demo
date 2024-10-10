@@ -11,14 +11,3 @@ ports:
   - port: 443:443
     nodeFilters:
       - loadbalancer
-options:
-  k3s:
-    extraArgs: # additional arguments passed to the `k3s server|agent` command; same as `--k3s-arg`
-      - arg: "--kubelet-arg=eviction-hard=imagefs.available<1%,nodefs.available<1%"
-        nodeFilters:
-          - agent:*
-          - server:*
-      - arg: "--kubelet-arg=eviction-minimum-reclaim=imagefs.available=1%,nodefs.available=1%"
-        nodeFilters:
-          - agent:*
-          - server:*

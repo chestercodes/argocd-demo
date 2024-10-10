@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aspire-dashboard-production
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/chestercodes/argocd-demo.git
+    targetRevision: HEAD
+    path: charts/aspire-dashboard
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: aspire-dashboard-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/chestercodes/argocd-demo.git
+    targetRevision: HEAD
+    path: charts/aspire-dashboard
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+    - CreateNamespace=true

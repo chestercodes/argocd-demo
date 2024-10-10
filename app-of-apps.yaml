@@ -1,19 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd
-  namespace: argocd
+  name: app-of-apps
+  namespace: argocd # fails if not same as argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: production
+  project: default
   source:
     repoURL: https://github.com/chestercodes/argocd-demo.git
     targetRevision: HEAD
-    path: charts/argo-cd
-    helm:
-      valueFiles:
-      - values.yaml
+    path: apps
   destination:
     server: https://kubernetes.default.svc
     namespace: production
