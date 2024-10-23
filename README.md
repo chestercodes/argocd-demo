@@ -1,5 +1,6 @@
 # argocd-demo
 
+
 ## setup cluster
 
 create cluster 
@@ -8,31 +9,47 @@ create cluster
 k3d cluster create --config ./k3d/config.yaml --kubeconfig-update-default --kubeconfig-switch-context --wait
 ```
 
-wait ~60 seconds
-
-see what has been created
+wait ~30 seconds, open k9s to see rest waking up
 
 ``` bash
-kubectl get all -A
+k9s -A
+```
+
+## install sample app
+
+``` bash
+kubectl apply -f sample/manifest.yaml
+start microsoft-edge:http://dotnet-sample-127-0-0-1.nip.io/
 ```
 
 ## install argocd
 
 ``` bash
-cd charts/argo-cd
-helm dependency update .
+helm dependency update charts/argo-cd
 kubectl create namespace argocd
-helm install argocd . --values ./values.yaml --namespace argocd
-# kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+helm install argocd charts/argo-cd --namespace argocd
+# wait about 90s
+start microsoft-edge:http://argocd-127-0-0-1.nip.io/
+# login is admin/hiargo
 ```
 
-## install apps
+## install argocd
 
 ``` bash
-# cd charts/argo-cd
-cd resources
-kubectl apply -f project.yaml
-helm install argocd . --values ./values.yaml --namespace argocd
-# kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+kubectl apply -f argocd.yaml
 ```
 
+## spin up app-of-apps
+
+``` bash
+kubectl apply -f app-of-apps.yaml
+```
+
+
+## tear down
+
+Need to run this **after** the session has happened.
+
+``` bash
+k3d cluster delete argocd-demo
+```

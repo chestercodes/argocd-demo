@@ -4,8 +4,6 @@ metadata:
   name: argocd
   # all argo apps need to be in same namespace as argocd pods
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   # projects used to scope permissions to repos and/or clusters 
   project: default
@@ -22,9 +20,3 @@ spec:
     server: https://kubernetes.default.svc
     # destination namespace
     namespace: argocd
-  syncPolicy:
-    automated:
-      selfHeal: true
-      prune: true
-    syncOptions:
-    - CreateNamespace=true

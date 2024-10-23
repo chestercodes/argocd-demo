@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: argocd-demo-app-infra
   namespace: argocd # fails if not same as argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
